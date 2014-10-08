@@ -1,9 +1,6 @@
-(function() {
-  define(['core'], function(Zuark) {
-    var object;
-    object = {};
-    Zuark.object = object;
-    return Zuark;
-  });
-
-}).call(this);
+define(['core'], function(Zuark) {
+  var object;
+  object = {};
+  Zuark.object = object;
+  return Zuark;
+});

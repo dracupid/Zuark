@@ -27,6 +27,6 @@
     "gulp-uglify": "^1.0.1"
   },
   "dependencies": {
-    "lodash": "^2.4.1"
+    "es5-shim": "^4.0.3"
   }
 }

@@ -28,7 +28,7 @@ gulp.task 'clean', ()->
 
 gulp.task 'coffee', ['clean'], ()->
     gulp.src srcPath.script
-    .pipe coffee()
+    .pipe coffee({bare:true})
     .pipe gulp.dest destPath.temp
 
 requireBuild = (cleanAMD, dest)->
@@ -60,7 +60,7 @@ gulp.task 'default',['js']
 
 gulp.task 'amd', ['clean'], ()->
     gulp.src srcPath.script
-    .pipe coffee()
+    .pipe coffee({bare:true})
     .pipe gulp.dest destPath.script_amd
 
 gulp.task 'amd_opt', ['coffee'],()->

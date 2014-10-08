@@ -1,4 +1,4 @@
-define ["core"], (Zuark)->
+quark = (Z, Util)->
     ###
     Space may be encode to either %20 or '+' which would not normally
     be handled properly by the builtin (en|de)codeURIComponent functions.
@@ -7,12 +7,12 @@ define ["core"], (Zuark)->
     @module QueryString
     @static
     ###
-    _ = require("lodash")
+
     _qsDecode = (qs) ->
         return decodeURIComponent qs.replace(/\+/g, ' ')
     _qsEncode = encodeURIComponent
 
-    Zuark.QueryString =
+    QueryString =
         decode: _qsDecode
         encode: _qsEncode
         ###
@@ -30,7 +30,7 @@ define ["core"], (Zuark)->
                 if window?.location?.search
                     qs = window.location.search
 
-            if _.isString(qs) and qs.length > 0
+            if Util.isString(qs) and qs.length > 0
                 qs = qs.substring 1 if qs[0] == '?'
 
                 pieces = qs.split(sep)
@@ -41,9 +41,9 @@ define ["core"], (Zuark)->
                     key = _qsDecode(tuple.shift()).trim()
                     value = _qsDecode(tuple.join(eq)).trim()
                     if key == '' then continue
-                    if _.isUndefined(parsed[key])
+                    if Util.isUndefined(parsed[key])
                         parsed[key] = value
-                    else if _.isArray(parsed[key])
+                    else if Util.isArray(parsed[key])
                         parsed[key].push value
                     else
                         parsed[key] = [parsed[key], value]
@@ -60,16 +60,23 @@ define ["core"], (Zuark)->
         @static
         ###
         stringify: (obj, sep = '&', eq = '=')->
-            if _.isString(obj)
+            if Util.isString(obj)
                 return obj
-            if not _.isPlainObject(obj)
-                throw TypeError("Only plain object or string can be stringify to a queryString")
             qs = []
             for key of obj
-                if obj.hasOwnProperty key
+                value = obj[key]
+                if obj.hasOwnProperty key and (Util.isString value or Util.isNumber value)
                     qs.push _qsEncode(key) + eq + _qsEncode(String(obj[key]))
 
             return qs.join sep
+    Z.QueryString = QueryString
+    QueryString
 
-    return Zuark
+if typeof module is 'object' and typeof module.exports is 'object'
+    Util = require './Util'
+    Z = require './Zuark'
+    exports = module.exports = quark Z, Util
 
+if typeof define is 'function' and define.amd
+    define 'QueryString',["Z", "Util"], (Z, Util)->
+        return quark Z,Util
